@@ -1,135 +1,21 @@
-<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <title>Preparations Tools</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/js/inject.js" defer></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    #siteTitleBtn { transition: opacity 0.3s ease; }
-  </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-  <!-- Toggle Button -->
-  <button id="toggleSidebar" class="fixed top-4 left-4 z-50 bg-blue-600 text-white px-3 py-1 rounded focus:outline-none">
-    ☰
-  </button>
+<body class="flex bg-gray-50 text-gray-800">
+  <!-- Sidebar -->
+  <div id="sidebar"></div>
 
-  <!-- Site Title Button -->
-  <div id="siteTitleBtn" class="fixed top-4 left-16 z-40 text-blue-700 font-bold text-lg hidden">
-    Preparations Tools
-  </div>
+  <!-- Main Content -->
+  <main class="flex-1 p-6">
+    <div id="header"></div>
 
-  <div class="flex min-h-screen">
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-64 bg-white border-r p-4 transition-transform transform translate-x-0">
-      <h2 class="text-xl font-bold text-blue-600 mb-4">Preparations Tools</h2>
-
-      <input 
-        id="searchInput"
-        type="text" 
-        placeholder="検索..." 
-        class="w-full px-2 py-1 border rounded mb-4"
-        oninput="filterTools()"
-      />
-
-      <ul id="toolList" class="space-y-2 text-sm">
-        <li><a href="/" class="tool-link text-blue-700 hover:underline">🏠 ホーム</a></li>
-        <li><a href="https://html-to-json.prepan-group.com" class="tool-link hover:underline" onclick="registerClick('HTML to JSON', 'https://html-to-json.prepan-group.com')">HTML to JSON</a></li>
-        <li><a href="https://yarimaus.prepan-group.com" class="tool-link hover:underline" onclick="registerClick('Yarimaus', 'https://yarimaus.prepan-group.com')">Yarimaus</a></li>
-      </ul>
-
-      <div id="recommendations" class="mt-6">
-        <h3 class="text-sm font-semibold mb-2 text-gray-600">あなたへのおすすめ</h3>
-        <ul id="recommendList" class="text-sm text-blue-600 space-y-1"></ul>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1 p-6 ml-0 md:ml-64">
-      <h1 class="text-2xl font-bold text-blue-700 mb-4">Preparations Tools</h1>
-      <p class="mb-4 text-gray-600">必要だから作った、ただそれだけのツール集。</p>
-
-      <input 
-        id="searchInputMain"
-        type="text" 
-        placeholder="検索..." 
-        class="w-full px-4 py-2 border rounded mb-6"
-        oninput="filterTools()"
-      />
-
-      <div id="toolGrid" class="grid gap-4 md:grid-cols-2">
-        <a href="https://html-to-json.prepan-group.com" onclick="registerClick('HTML to JSON', 'https://html-to-json.prepan-group.com')" class="block bg-white p-4 border rounded hover:bg-gray-100 tool-card">
-          <h2 class="text-xl font-semibold text-blue-700">HTML to JSON</h2>
-          <p class="text-sm text-gray-600">HTML構造をJSON化するツール</p>
-        </a>
-        <a href="https://yarimaus.prepan-group.com" onclick="registerClick('Yarimaus', 'https://yarimaus.prepan-group.com')" class="block bg-white p-4 border rounded hover:bg-gray-100 tool-card">
-          <h2 class="text-xl font-semibold text-blue-700">Yarimaus</h2>
-          <p class="text-sm text-gray-600">匿名タスク共有ツール</p>
-        </a>
-      </div>
-
-      <div class="mt-10">
-        <h3 class="text-lg font-semibold mb-2 text-gray-600">あなたへのおすすめ</h3>
-        <ul id="recommendListMain" class="text-sm text-blue-600 space-y-1"></ul>
-      </div>
-    </main>
-  </div>
-
-  <script>
-    const sidebar = document.getElementById("sidebar");
-    const toggleBtn = document.getElementById("toggleSidebar");
-    const siteTitle = document.getElementById("siteTitleBtn");
-
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("-translate-x-full");
-      const isHidden = sidebar.classList.contains("-translate-x-full");
-      siteTitle.classList.toggle("hidden", !isHidden);
-    });
-
-    const tools = [
-      { name: "HTML to JSON", url: "https://html-to-json.prepan-group.com" },
-      { name: "Yarimaus", url: "https://yarimaus.prepan-group.com" },
-    ];
-
-    function getClicks() {
-      return JSON.parse(localStorage.getItem("toolClicks") || "{}");
-    }
-
-    function registerClick(name, url) {
-      const clicks = getClicks();
-      clicks[name] = (clicks[name] || 0) + 1;
-      localStorage.setItem("toolClicks", JSON.stringify(clicks));
-      // クリック後にリダイレクトさせる用の戻り値として false を使わない
-    }
-
-    function getTopRecommendations() {
-      const clicks = getClicks();
-      return Object.entries(clicks)
-        .sort((a, b) => b[1] - a[1])
-        .map(([name]) => tools.find(t => t.name === name))
-        .filter(Boolean)
-        .slice(0, 5);
-    }
-
-    function showRecommendations() {
-      const recs = getTopRecommendations();
-      const html = recs.map(t => `<li><a href="${t.url}">${t.name}</a></li>`).join("");
-      document.getElementById("recommendList").innerHTML = html;
-      document.getElementById("recommendListMain").innerHTML = html;
-    }
-
-    function filterTools() {
-      const keyword = (document.getElementById("searchInput").value || document.getElementById("searchInputMain").value || "").toLowerCase();
-      document.querySelectorAll(".tool-card").forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(keyword) ? "block" : "none";
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      showRecommendations();
-    });
-  </script>
+    <h2 class="text-xl font-bold text-blue-700 mb-4">ツール一覧</h2>
+    <div id="tool-grid" class="grid gap-4 md:grid-cols-2"></div>
+  </main>
 </body>
 </html>
