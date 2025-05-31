@@ -1,4 +1,3 @@
-
 function loadComponent(id, path, callback) {
   fetch(path)
     .then(res => res.text())
@@ -47,6 +46,27 @@ function setupSidebarToggle() {
   });
 }
 
+function trackClick(name) {
+  const raw = localStorage.getItem("clickStats") || "{}";
+  const stats = JSON.parse(raw);
+  stats[name] = (stats[name] || 0) + 1;
+  localStorage.setItem("clickStats", JSON.stringify(stats));
+}
+
+function populateRecommendations(tools) {
+  const list = document.getElementById("recommend-list");
+  if (!list) return;
+  const raw = localStorage.getItem("clickStats") || "{}";
+  const stats = JSON.parse(raw);
+  const ranked = tools
+    .filter(tool => stats[tool.name])
+    .sort((a, b) => stats[b.name] - stats[a.name])
+    .slice(0, 5);
+  list.innerHTML = ranked.map(tool => `
+    <li><a href="${tool.url}" class="hover:underline" onclick="trackClick('${tool.name}')">${tool.name}</a></li>
+  `).join("");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   loadConfig(config => {
     loadComponent("header", "components/header.html", () => {
@@ -55,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadComponent("sidebar", "components/sidebar.html", () => {
       populateSidebar(config.tools);
       setupSidebarToggle();
+      populateRecommendations(config.tools);
     });
     populateToolGrid(config.tools);
   });
