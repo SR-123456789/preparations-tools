@@ -1,13 +1,15 @@
-function loadComponent(id, path) {
+
+function loadComponent(id, path, callback) {
   fetch(path)
     .then(res => res.text())
     .then(html => {
       document.getElementById(id).innerHTML = html;
+      if (typeof callback === "function") callback();
     });
 }
 
 function loadConfig(callback) {
-  fetch("/config.json")
+  fetch("config.json")
     .then(res => res.json())
     .then(config => callback(config));
 }
@@ -46,13 +48,14 @@ function setupSidebarToggle() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadComponent("header", "/components/header.html");
-  loadComponent("sidebar", "/components/sidebar.html");
-
   loadConfig(config => {
-    populateHeader(config.siteTitle);
-    populateSidebar(config.tools);
+    loadComponent("header", "components/header.html", () => {
+      populateHeader(config.siteTitle);
+    });
+    loadComponent("sidebar", "components/sidebar.html", () => {
+      populateSidebar(config.tools);
+      setupSidebarToggle();
+    });
     populateToolGrid(config.tools);
-    setupSidebarToggle();
   });
 });

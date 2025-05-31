@@ -4,13 +4,13 @@
     {
       "name": "HTML to JSON",
       "slug": "html-to-json",
-      "url": "/tools/html-to-json.html",
+      "url": "tools/html-to-json.html",
       "description": "HTML構造をJSON化するツール"
     },
     {
       "name": "Yarimaus",
       "slug": "yarimaus",
-      "url": "/tools/yarimaus.html",
+      "url": "tools/yarimaus.html",
       "description": "匿名タスク共有ツール"
     }
   ]
