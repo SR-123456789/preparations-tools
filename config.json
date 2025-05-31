@@ -4,7 +4,7 @@
     {
       "name": "HTML to JSON",
       "slug": "html-to-json",
-      "url": "tools/html-to-json.html",
+      "url": "tools/htmlToJSON.html",
       "description": "HTML構造をJSON化するツール"
     },
     {
