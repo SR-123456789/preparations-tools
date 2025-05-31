@@ -1,20 +1,24 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>HTML to JSON 埋め込み</title>
+  <title>HTML to JSON</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    html, body, iframe {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-  <header class="bg-white shadow px-6 py-4 border-b">
-    <h1 class="text-xl font-bold text-blue-700">🧰 HTML to JSON 埋め込みビュー</h1>
-    <p class="text-sm text-gray-600 mt-1">https://html-to-json.prepan-group.com を下に表示しています</p>
-  </header>
+<body class="bg-white">
+  <!-- Sidebar toggle button in the corner -->
+  <button id="sidebar-toggle" class="fixed top-2 left-2 z-50 bg-blue-600 text-white px-2 py-1 text-xs rounded hover:bg-blue-700">
+    Preparations Tools
+  </button>
 
-  <main class="flex-1 p-4">
-    <div class="border rounded overflow-hidden" style="height: 85vh">
-      <iframe src="https://html-to-json.prepan-group.com" class="w-full h-full border-none" loading="lazy"></iframe>
-    </div>
-  </main>
+  <iframe src="https://html-to-json.prepan-group.com" class="w-full h-full border-none" loading="lazy"></iframe>
 </body>
 </html>
